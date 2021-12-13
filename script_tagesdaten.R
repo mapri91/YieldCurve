@@ -2,26 +2,26 @@
 ### Bearbeiter: Matthias Priehs (ID: 454225)
 ### Thema: Zinsstruktur Hypothese
 
-## 1. Datensätze laden/anpassen und benötigte Pakete beziehen
+## 1. DatensÃ¤tze laden/anpassen und benÃ¶tigte Pakete beziehen
 # Pakete laden
 library(tseries) # ADF Test
 library(urca) # ADF Test
 library(egcm) # Engle-Granger Test
-library(lmtest) # FÜr Test auf Autokorrelation
-library(sjPlot) # Für HTML Outputs der Regression
-library(papeR) # FÜr deskriptive Statistiken
+library(lmtest) # FÃœr Test auf Autokorrelation
+library(sjPlot) # FÃ¼r HTML Outputs der Regression
+library(papeR) # FÃœr deskriptive Statistiken
 library(ggplot2) # Grafiken
 library(scales) # ggplot-Addon
-library(Cairo) # Für Grafiken mit Anti-Aliasing
+library(Cairo) # FÃ¼r Grafiken mit Anti-Aliasing
 library(cairoDevice) 
 library(gridExtra)
 library(grid)
 
 
 # Verzeichnis wechseln
-setwd("H:/Google Drive/Uni/Uni Münster/Module/Seminar Forschungspraktikum/R")
+setwd("")
 
-## Datensatz laden (10-jährige Bundesanleihe (DE))
+## Datensatz laden (10-jÃ¤hrige Bundesanleihe (DE))
 bond_10y <- as.data.frame(read.csv("10-year-bond-yield-de-daily.csv", dec = ",", sep = ";"))
 
 # Anpassungen
@@ -30,7 +30,7 @@ bond_10y <- bond_10y[-c(1:4),]
 bond_10y <- bond_10y[,-3]
 
 names(bond_10y)[names(bond_10y) == "BBK01.WT1010"] <- "yields_10y"
-names(bond_10y)[names(bond_10y) == "ï.."] <- "date"
+names(bond_10y)[names(bond_10y) == "Ã¯.."] <- "date"
 
 mysub <- function(x) {sub(",",".",x)}
 bond_10y_help <- apply(bond_10y, 2, mysub)
@@ -50,7 +50,7 @@ euri_3m <- euri_3m[-c(1:4),]
 euri_3m <- euri_3m[,-3]
 
 names(euri_3m)[names(euri_3m) == "BBK01.ST0316"] <- "interest_3m"
-names(euri_3m)[names(euri_3m) == "ï.."] <- "date"
+names(euri_3m)[names(euri_3m) == "Ã¯.."] <- "date"
 
 euri_3m_help <- apply(euri_3m, 2, mysub)
 euri_3m <- data.frame(euri_3m_help)
@@ -64,11 +64,11 @@ euri_3m <- euri_3m[euri_3m$date >= "2001-10-01",]
 rm(bond_10y_help)
 rm(euri_3m_help)
 
-## 2. Zieldatensätze erstellen
-# Mergen der Datensätze "euri_3m" und "bond_10y"
+## 2. ZieldatensÃ¤tze erstellen
+# Mergen der DatensÃ¤tze "euri_3m" und "bond_10y"
 dataset <- merge(bond_10y, euri_3m, by = "date")
 
-# Erstellen der Datensätze für Periode vor und nach 2008
+# Erstellen der DatensÃ¤tze fÃ¼r Periode vor und nach 2008
 dataset_2006 <- dataset[dataset$date <= "2006-01-01",]
 dataset_2008 <- dataset[dataset$date <= "2008-01-01",]
 dataset_2013 <- dataset[dataset$date >= "2013-01-01",]
@@ -82,7 +82,7 @@ diff_2019 <- dataset_2019$yields_10y-dataset_2019$interest_3m
 
 
 ## 3. Deskriptive Statistiken
-# Erstellen eines aussagekräftigen Plots
+# Erstellen eines aussagekrÃ¤ftigen Plots
 CairoPNG("plot_spreads.png", units = "px" , width = 1600, height = 900,
          dpi = 150)
 plot(dataset$date, dataset$yields_10y,
@@ -113,7 +113,7 @@ legend("topright",
 dev.off()
 
 ## 4. Statistische Tests
-# Dickey-Fuller-Test (Stationaritätstest)
+# Dickey-Fuller-Test (StationaritÃ¤tstest)
 ur.df(dataset$yields_10y, lags = 6, selectlags = "AIC", type = "drift")
 ur.df(dataset$interest_3m, lags = 6, selectlags = "AIC", type = "drift")
 ur.df(diff_total, lags = 6, selectlags = "AIC", type = "drift")
@@ -126,7 +126,7 @@ egcm(dataset$interest_3m, dataset$yields_10y)
 egcm(dataset_2008$interest_3m, dataset_2008$yields_10y)
 egcm(dataset_2019$interest_3m, dataset_2019$yields_10y)
 
-## 5. Tabellen und Grafiken für Präsentation 
+## 5. Tabellen und Grafiken fÃ¼r PrÃ¤sentation 
 # Deskriptive Analyse
 
 # Plot - Ganzer Datensatz
@@ -180,7 +180,7 @@ ggplot(data = dataset_2019, aes(x = date))+
   scale_x_date(date_breaks = "1 years",labels = date_format("%Y"))
 dev.off()
 
-# Rasterplot für Powerpoint
+# Rasterplot fÃ¼r Powerpoint
 
 plot1 <- ggplot(data = dataset, aes(x = date))+
   ggtitle("2002-2019")+
